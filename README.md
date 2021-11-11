@@ -16,31 +16,44 @@ Visit http://www.pywhois.com for a demo.
 
 Requirements:
 
- - Ubuntu >= 16.04LTS
- - Python 2.7
+ - Ubuntu 20.04 LTS
+ - Python 3.8
 
 Install dependency:
 
- - sudo apt install whois
- - pip install flask
+ - apt install whois
+ - pip3 install flask
 
 Install a web server. You can choose apache, nginx or whatever you like.
 
 Configura the web server.
 
-For more deployment options, see:http://flask.pocoo.org/docs/0.12/deploying/
+For more deployment options, see:https://flask.palletsprojects.com/en/2.0.x/deploying/
 
-Or you can just run this script with `nohup` and redirect the domain name to `localhost:5000`
+Or you can just run this script with `nohup` and redirect the domain name to `localhost:5001`
 
-    nohup python -u pywhois.py > out.log 2>&1 &
+    nohup python3 -u pywhois.py > out.log 2>&1 &
+
+Here is my example conf file for nginx server:
+
+    location /
+    {
+        proxy_pass       http://localhost:5001;
+        proxy_set_header Host localhost;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        add_header       X-Cache $upstream_cache_status;
+        add_header       Cache-Control no-cache;
+    }
 
 Here is my example conf file for apache server:
 
     <VirtualHost *:80>
     ServerName YOURDOMAIN.NAME
     ServerAlias YOURDOMAIN.NAME www.YOURDOMAIN.NAME
-    ProxyPass / http://localhost:5000/
-    ProxyPassReverse / http://localhost:5000/
+    ProxyPass / http://localhost:5001/
+    ProxyPassReverse / http://localhost:5001/
     ErrorLog  /data/wwwlog/YOURDOMAIN.NAME/error.log
     TransferLog  /data/wwwlog/YOURDOMAIN.NAME/access.log
     </VirtualHost>
@@ -61,9 +74,12 @@ This tool support two usages:
  Email: mail@ztang.com
 
  ## Changelog
+ 
+[0.5] - 2021-11-11
+ - Fix bugs with Python3.
 
 [0.4] - 2019-07-30
- - Fix bugs
+ - Fix bugs.
 
 [0.3] - 2017-05-12
  - Rebuild with Python.

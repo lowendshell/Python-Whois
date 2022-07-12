@@ -10,8 +10,6 @@ whois information from Ubuntu shell.
 
 **Support all tlds.**
 
-Visit http://www.pywhois.com for a demo.
-
 ## Deployment
 
 Requirements:
@@ -68,10 +66,6 @@ This tool support two usages:
 
  - Whois information extract.
  - Rewrite the templates.
-
- ## Contact
-
- Email: mail@ztang.com
 
  ## Changelog
  
